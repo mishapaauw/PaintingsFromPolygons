@@ -33,7 +33,7 @@ class Algorithm():
 class Hillclimber(Algorithm):
 	def __init__(self, goal, w, h, num_poly, num_vertex, comparison_method, savepoints, outdirectory, iterations):
 		super().__init__(goal, w, h, num_poly, num_vertex, comparison_method, savepoints, outdirectory)
-		self.iterations = iterations	
+		self.iterations = iterations
 
 		# initializing organism
 		self.best = Organism(0,0,None, self.w, self.h)
@@ -54,7 +54,7 @@ class Hillclimber(Algorithm):
 
 			if self.comparison_method == "MSE":
 				james.calculate_fitness_mse(self.goalpx)
-		
+
 			if james.fitness <= self.best.fitness:
 				self.best = deepcopy(james)
 				# print(self.best.fitness)
@@ -62,10 +62,12 @@ class Hillclimber(Algorithm):
 
 			if i in self.savepoints:
 				self.best.save_img(self.outdirectory)
-			
-			self.save_data([self.num_poly, i, self.best.fitness])
+				self.best.save_polygons(self.outdirectory)
+				self.save_data([self.num_poly, i, self.best.fitness])
 
 		self.best.save_img(self.outdirectory)
+		self.best.save_polygons(self.outdirectory)
+		self.save_data([self.num_poly, i, self.best.fitness])
 
 class SA(Algorithm):
 	# https://am207.github.io/2017/wiki/lab4.html
@@ -111,7 +113,7 @@ class SA(Algorithm):
 
 			acceptance = self.acceptance_probability(dE, T)
 
-			if random() < acceptance: 
+			if random() < acceptance:
 				self.current.genome = james.deepish_copy_genome()
 				self.current.fitness = james.fitness
 
@@ -155,7 +157,7 @@ class PPA(Algorithm):
 		for organism in self.pop.organisms:
 			organism.nr = random.randint(1, self.nmax)
 			organism.d = random.randint(1, self.mmax)
-		
+
 	def calculate_runners(self):
 		# default runner calculation for all organisms in the population
 		for organism in self.pop.organisms:
@@ -188,11 +190,11 @@ class PPA(Algorithm):
 
 			if gen in self.savepoints:
 				self.best.save_img(self.outdirectory)
-		
+
 			if self.best.fitness != self.worst.fitness:
 				self.calculate_runners()
 				self.generation(gen)
-			else: 
+			else:
 				self.calculate_random_runners()
 				self.generation(gen)
 
@@ -200,8 +202,8 @@ class PPA(Algorithm):
 
 
 			self.pop.eliminate()
-			best, worst, median, mean = self.pop.return_data()			
-			self.save_data([self.num_poly, gen, self.evaluations, best.fitness, worst.fitness, median, mean])	
+			best, worst, median, mean = self.pop.return_data()
+			self.save_data([self.num_poly, gen, self.evaluations, best.fitness, worst.fitness, median, mean])
 
 
 		self.pop.sort_by_fitness()

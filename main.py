@@ -19,7 +19,7 @@ im_goal = Image.open("paintings/monalisa-240-180.png")
 goal = np.array(im_goal)
 h, w = np.shape(goal)[0], np.shape(goal)[1]
 method = "MSE"
-outdirx = "test/"
+# outdirx = "test/"
 
 # genome size settings
 polygons = 250
@@ -74,7 +74,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 				# make a directory for this run, containing the per iteration data and a selection of images
 				outdir = name + "/" + str(exp) + "-" + str(repetition) + "-" + str(poly) + "-" + painting_name
 				os.makedirs(outdir)
-				
+
 				# run the hillclimber
 				im_goal = Image.open(painting)
 				goal = np.array(im_goal)
@@ -114,10 +114,10 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 
 
 name = "1miltest.x2"
-# paintins = ["paintings/monalisa-240-180.png", "paintings/bach-240-180.png", "paintings/dali-240-180.png", "paintings/mondriaan2-180-240.png", "paintings/pollock-240-180.png", "paintings/starrynight-240-180.png"]
-paintins = ["paintings/monalisa-240-180.png"]
-savepoints = list(range(0, 15000, 250)) + list(range(15000, 1000000, 50000))
-repetitions = 1
+paintins = ["paintings/monalisa-240-180.png", "paintings/bach-240-180.png", "paintings/dali-240-180.png", "paintings/mondriaan2-180-240.png", "paintings/pollock-240-180.png", "paintings/starrynight-240-180.png"]
+#paintins = ["paintings/monalisa-240-180.png"]
+savepoints = list(range(0, 15000, 250)) + list(range(15000, 1000000, 10000))
+repetitions = 5
 # polys = [25]
 polys = [5, 25, 75, 125, 175, 250]
 iterations = 1000000
@@ -130,17 +130,16 @@ nmax = 5
 
 args = (name, paintins, repetitions, polys, iterations, savepoints)
 
-names = ["paratest1", "paratest2","paratest2"]
+names = ["mona", "bach","dali", "mondriaan", "pollock", "starrynight"]
 
 #experiment(name, "HC" paintins, repetitions, polys, iterations, savepoints)
 
 # parallelize stuff
 
-if __name__ == '__main__':    
-	worker_count = 2
+if __name__ == '__main__':
+	worker_count = 6
 	worker_pool = []
 	for i in range(worker_count):
-		args = (names[i], paintins, repetitions, polys, iterations, savepoints)
+		args = (names[i], "HC", paintins[i], repetitions, polys, iterations, savepoints)
 		p = Process(target=experiment, args=args)
-
 		p.start()

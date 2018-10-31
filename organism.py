@@ -2,7 +2,7 @@ import numpy as np
 from math import ceil
 from copy import deepcopy
 from PIL import Image, ImageDraw
-import cairocffi as cairo
+# import cairocffi as cairo
 from skimage.measure import compare_ssim as ssim
 from random import randint, choice, random
 from numba import njit, jit
@@ -120,7 +120,7 @@ class Organism():
 
 	def calculate_fitness_mse(self, goal):
 		# calls jitted MSE function declared above this class definition
-		self.fitness = mse(self.array, goal) 
+		self.fitness = mse(self.array, goal)
 
 	def calculate_fitness_ssim(self, goal):
 		# calculates structural similarity index image difference (higher = more similar)
@@ -133,9 +133,9 @@ class Organism():
 
 	def calculate_runners(self, nmax, mmax):
 		# see Salhi & Fraga 2011
-		
+
 		# mapping fitness to emphasize good solutions
-		self.Nx = 0.5 * (np.tanh(4 * self.scaled_fitness - 2) + 1) 
+		self.Nx = 0.5 * (np.tanh(4 * self.scaled_fitness - 2) + 1)
 
 		# calculate number of runners (nr) and the distance in number of mutations (d)
 		r = random()
@@ -143,10 +143,10 @@ class Organism():
 		self.d = int(ceil(mmax * (1 - self.Nx) * r))
 
 	def random_mutation(self, number):
-		# performs number random mutations 
+		# performs number random mutations
 		# note: function names of all available mutations have to be hardcoded in list 'options' below
 		options = [self.gene_jump, self.move_vertex, self.transfer_vertex, self.change_color]
-		
+
 		for i in range(0, number):
 			mutation = choice(options)
 			mutation()
@@ -179,8 +179,8 @@ class Organism():
 			giver = randint(0, len(self.genome) - 1)
 			receiver = randint(0, len(self.genome) - 1)
 			if giver != receiver and len(self.genome[giver][0]) > 3:
-				break 
-			
+				break
+
 		# pick a vertex from the giver and delete it
 		n = randint(0, len(self.genome[giver][0]) - 1)
 		del self.genome[giver][0][n]
@@ -191,16 +191,16 @@ class Organism():
 		xy2 = self.genome[receiver][0][i + 1]
 
 		# calculate the slope of the line between xy1 and xy2
-		slope = (xy1[1] - xy2[1]) / (xy1[0] - xy2[0] + 0.00001) 		
+		slope = (xy1[1] - xy2[1]) / (xy1[0] - xy2[0] + 0.00001)
 
-		# pick a random x between x1 and x2, and calculate correponding y. round.	
+		# pick a random x between x1 and x2, and calculate correponding y. round.
 		if xy1[0] < xy2[0]:
 			x = randint(xy1[0], xy2[0])
 			dx = x - xy1[0]
 			y = int(round(dx * slope)) + xy1[1]
 		else:
 			x = randint(xy2[0], xy1[0])
-			dx = x - xy2[0] 
+			dx = x - xy2[0]
 			y = int(round(dx * slope)) + xy2[1]
 
 		xy_new = (x, y)
@@ -268,9 +268,9 @@ class Organism():
 
 # # print(end - start)
 
-alex = Organism(1, 2, "test", 498, 402)
-alex.initialize_genome(50, 200)
-alex.save_polygons("test")
+#alex = Organism(1, 2, "test", 498, 402)
+#alex.initialize_genome(50, 200)
+#alex.save_polygons("test")
 
 # alex.genome_to_array()
 # alex.save_img()
