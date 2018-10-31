@@ -6,10 +6,8 @@ import time
 import math
 import os
 import csv
+from multiprocessing import Process, current_process
 
-# from globals import *
-
-# goal
 
 # im_goal = Image.open("paintings/bach-240-180.png")
 # im_goal = Image.open("paintings/dali-240-180.png")
@@ -33,12 +31,7 @@ population_size = 30
 nmax = 5 # max number of runners for the best indidiviual within a population
 
 
-
-# SA = SA(goal, w, h, polygons, vertices, method, savepoints, outdirx, 100000)
-# SA.run()
-# SA.write_data()
-
-def experiment(name, paintings, repetitions, polys, iterations, savepoints):
+def experiment(name, algorithm, paintings, repetitions, polys, iterations, savepoints):
 	# get date/time
 	now = time.strftime("%c")
 
@@ -87,24 +80,24 @@ def experiment(name, paintings, repetitions, polys, iterations, savepoints):
 				goal = np.array(im_goal)
 				h, w = np.shape(goal)[0], np.shape(goal)[1]
 
+				if algorithm == "PPA":
+					nparam = (poly * 4 * 2) + (poly * 4) + poly
+					mmax = math.ceil(nparam * 0.10)
 
-				# the number of mutable parameters depends on the number of vertices and polygons
-				nparam = (poly * 4 * 2) + (poly * 4) + poly
+					solver = PPA(goal, w, h, poly, poly*4, "MSE", savepoints, outdir, iterations, population_size, nmax, mmax)
 
-				# longest runners mutate 20% of their parameters
-				mmax = math.ceil(nparam * 0.10)
+				elif algorithm == "HC":
+					solver = Hillclimber(goal, w, h, poly, poly * 4, "MSE", savepoints, outdir, iterations)
 
+				elif algorithm =="SA":
+					solver = Hillclimber(goal, w, h, poly, poly * 4, "MSE", savepoints, outdir, iterations)
 
-				ppa = PPA(goal, w, h, poly, poly*4, "MSE", savepoints, outdir, iterations, population_size, nmax, mmax)
-				ppa.run()
-				ppa.write_data()
-				# sa = SA(goal, w, h, poly, poly * 4, "MSE", savepoints, outdir, iterations)
-				# sa.run()
-				
-				# sa.write_data()
+				# run the solver with selected algorithm
+				solver.run()
+				solver.write_data()
+				bestMSE = solver.best.fitness
 
 				# save best value in maindata sheet
-				bestMSE = ppa.best.fitness
 				datarow = [painting_name, str(poly * 4), str(repetition), bestMSE]
 
 				with open(datafile, 'a', newline = '') as f:
@@ -120,24 +113,34 @@ def experiment(name, paintings, repetitions, polys, iterations, savepoints):
 
 
 
-name = "PPA"
-paintins = ["paintings/monalisa-240-180.png", "paintings/bach-240-180.png", "paintings/dali-240-180.png", "paintings/mondriaan2-180-240.png", "paintings/pollock-240-180.png", "paintings/starrynight-240-180.png"]
-# paintins = ["paintings/mondriaan2-180-240.png"]
-savepoints = list(range(0, 15000, 250)) + list(range(15000, 100000, 5000))
-repetitions = 5
+name = "1miltest.x2"
+# paintins = ["paintings/monalisa-240-180.png", "paintings/bach-240-180.png", "paintings/dali-240-180.png", "paintings/mondriaan2-180-240.png", "paintings/pollock-240-180.png", "paintings/starrynight-240-180.png"]
+paintins = ["paintings/monalisa-240-180.png"]
+savepoints = list(range(0, 15000, 250)) + list(range(15000, 1000000, 50000))
+repetitions = 1
 # polys = [25]
 polys = [5, 25, 75, 125, 175, 250]
-iterations = 100000
+iterations = 1000000
 # define a list of savepoints, more in the first part of the run, and less later.
-savepoints = list(range(0, 2500, 50)) + list(range(2500, 10000, 500))
+# savepoints = list(range(0, 2500, 50)) + list(range(2500, 10000, 500))
 
 population_size = 30
 nmax = 5
 
 
-experiment(name, paintins, repetitions, polys, iterations, savepoints)
+args = (name, paintins, repetitions, polys, iterations, savepoints)
 
+names = ["paratest1", "paratest2","paratest2"]
 
+#experiment(name, "HC" paintins, repetitions, polys, iterations, savepoints)
 
+# parallelize stuff
 
+if __name__ == '__main__':    
+	worker_count = 2
+	worker_pool = []
+	for i in range(worker_count):
+		args = (names[i], paintins, repetitions, polys, iterations, savepoints)
+		p = Process(target=experiment, args=args)
 
+		p.start()
