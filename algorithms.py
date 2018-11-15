@@ -80,6 +80,8 @@ class SA(Algorithm):
 		self.best.initialize_genome(self.num_poly, num_vertex)
 		self.best.genome_to_array()
 		self.best.calculate_fitness_mse(self.goalpx)
+		self.best.save_img(self.outdirectory)
+		self.best.save_polygons(self.outdirectory)
 
 		self.current = deepcopy(self.best)
 
@@ -113,18 +115,27 @@ class SA(Algorithm):
 
 			acceptance = self.acceptance_probability(dE, T)
 
-			if random() < acceptance:
+			if random.random() < acceptance:
 				self.current.genome = james.deepish_copy_genome()
 				self.current.fitness = james.fitness
+				self.current.generation = james.generation
 
 			if self.current.fitness < self.best.fitness:
 				self.best = deepcopy(self.current)
-
-			if i in self.savepoints:
+				self.best.genome_to_array()
 				self.best.generation = i
 				self.best.save_img(self.outdirectory)
+				self.best.save_polygons(self.outdirectory)
 
-			self.save_data([self.num_poly, i, self.best.fitness, self.current.fitness])
+			self.best.generation = i
+
+			if i % 100 == 0:
+				self.save_data([self.num_poly, i, self.best.fitness, self.current.fitness])
+
+		self.best.save_img(self.outdirectory)
+		self.best.save_polygons(self.outdirectory)
+		self.save_data([self.num_poly, i, self.best.fitness, self.current.fitness])
+
 
 		# self.best.save_img(self.outdirectory)
 
@@ -151,6 +162,12 @@ class PPA(Algorithm):
 			alex.genome_to_array()
 			alex.calculate_fitness_mse(self.goalpx)
 			self.pop.add_organism(alex)
+
+		# save best random STARTING
+		self.pop.sort_by_fitness()
+		self.best = self.pop.return_best()
+		self.best.save_img(self.outdirectory)
+		self.best.save_polygons(self.outdirectory)
 
 	def calculate_random_runners(self):
 		# if the populations max and min fitness are equal, this function generates random runners and distance for all organisms
@@ -190,6 +207,7 @@ class PPA(Algorithm):
 
 			if gen in self.savepoints:
 				self.best.save_img(self.outdirectory)
+				self.best.save_polygons(self.outdirectory)
 
 			if self.best.fitness != self.worst.fitness:
 				self.calculate_runners()

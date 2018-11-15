@@ -82,7 +82,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 
 				if algorithm == "PPA":
 					nparam = (poly * 4 * 2) + (poly * 4) + poly
-					mmax = math.ceil(nparam * 0.10)
+					mmax = math.ceil(nparam * 0.20)
 
 					solver = PPA(goal, w, h, poly, poly*4, "MSE", savepoints, outdir, iterations, population_size, nmax, mmax)
 
@@ -90,7 +90,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 					solver = Hillclimber(goal, w, h, poly, poly * 4, "MSE", savepoints, outdir, iterations)
 
 				elif algorithm =="SA":
-					solver = Hillclimber(goal, w, h, poly, poly * 4, "MSE", savepoints, outdir, iterations)
+					solver = SA(goal, w, h, poly, poly * 4, "MSE", savepoints, outdir, iterations)
 
 				# run the solver with selected algorithm
 				solver.run()
@@ -114,32 +114,33 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 
 
 name = "1miltest.x2"
-paintins = ["paintings/monalisa-240-180.png", "paintings/bach-240-180.png", "paintings/dali-240-180.png", "paintings/mondriaan2-180-240.png", "paintings/pollock-240-180.png", "paintings/starrynight-240-180.png"]
-#paintins = ["paintings/monalisa-240-180.png"]
-savepoints = list(range(0, 15000, 250)) + list(range(15000, 1000000, 10000))
+paintins = [["paintings/monalisa-240-180.png"], ["paintings/bach-240-180.png"], ["paintings/dali-240-180.png"], ["paintings/mondriaan2-180-240.png"], ["paintings/pollock-240-180.png"], ["paintings/starrynight-240-180.png"], ["paintings/kiss-180-240.png"]]
+# paintin = ["paintings/kiss-180-240.png"]
+savepoints = list(range(0, 21000, 50))
 repetitions = 5
 # polys = [25]
 polys = [5, 25, 75, 125, 175, 250]
 iterations = 1000000
 # define a list of savepoints, more in the first part of the run, and less later.
-# savepoints = list(range(0, 2500, 50)) + list(range(2500, 10000, 500))
+savepoints = list(range(0, 100000, 2500)) + list(range(100000, 1000000, 10000))
 
 population_size = 30
 nmax = 5
 
 
-args = (name, paintins, repetitions, polys, iterations, savepoints)
+# args = (name, paintins, repetitions, polys, iterations, savepoints)
 
-names = ["mona", "bach","dali", "mondriaan", "pollock", "starrynight"]
-
+names = ["mona", "bach","dali", "mondriaanSA", "pollock", "starrynight", "kiss"]
+# names = ["kiss1", "kiss2","kiss3","kiss4","kiss5"]
 #experiment(name, "HC" paintins, repetitions, polys, iterations, savepoints)
 
 # parallelize stuff
 
 if __name__ == '__main__':
-	worker_count = 6
+	worker_count = 7
 	worker_pool = []
 	for i in range(worker_count):
-		args = (names[i], "HC", paintins[i], repetitions, polys, iterations, savepoints)
+		# print(str(paintins[i]), paintin)
+		args = (names[i], "SA", paintins[i], repetitions, polys, iterations, savepoints)
 		p = Process(target=experiment, args=args)
 		p.start()
