@@ -1,0 +1,3 @@
+Pillow
+scikit-image
+numba

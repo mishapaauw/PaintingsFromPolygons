@@ -11,24 +11,24 @@ from multiprocessing import Process, current_process
 
 # im_goal = Image.open("paintings/bach-240-180.png")
 # im_goal = Image.open("paintings/dali-240-180.png")
-im_goal = Image.open("paintings/monalisa-240-180.png")
+#im_goal = Image.open("paintings/monalisa-240-180.png")
 # im_goal = Image.open("paintings/pollock-240-180.png")
 # im_goal = Image.open("paintings/mondriaan2-180-240.png")
 
 
-goal = np.array(im_goal)
-h, w = np.shape(goal)[0], np.shape(goal)[1]
-method = "MSE"
+#goal = np.array(im_goal)
+#h, w = np.shape(goal)[0], np.shape(goal)[1]
+#method = "MSE"
 # outdirx = "test/"
 
 # genome size settings
-polygons = 250
-vertices = 1000
+#polygons = 250
+#vertices = 1000
 
 
 # ppa specific settings
-population_size = 30
-nmax = 5 # max number of runners for the best indidiviual within a population
+# population_size = 30
+# nmax = 5 # max number of runners for the best indidiviual within a population
 
 
 def experiment(name, algorithm, paintings, repetitions, polys, iterations, savepoints):
@@ -72,7 +72,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 			for repetition in range(repetitions):
 				tic = time.time()
 				# make a directory for this run, containing the per iteration data and a selection of images
-				outdir = name + "/" + str(exp) + "-" + str(repetition) + "-" + str(poly) + "-" + painting_name
+				outdir = "output/"+ name + "/" + str(exp) + "-" + str(repetition) + "-" + str(poly) + "-" + painting_name
 				os.makedirs(outdir)
 
 				# run the hillclimber
@@ -114,7 +114,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 
 
 name = "1miltest.x2"
-paintins = [["paintings/monalisa-240-180.png"], ["paintings/bach-240-180.png"], ["paintings/dali-240-180.png"], ["paintings/mondriaan2-180-240.png"], ["paintings/pollock-240-180.png"], ["paintings/starrynight-240-180.png"], ["paintings/kiss-180-240.png"]]
+paintings_files = [["paintings/monalisa-240-180.png"], ["paintings/bach-240-180.png"], ["paintings/dali-240-180.png"], ["paintings/mondriaan2-180-240.png"], ["paintings/pollock-240-180.png"], ["paintings/starrynight-240-180.png"], ["paintings/kiss-180-240.png"]]
 # paintin = ["paintings/kiss-180-240.png"]
 savepoints = list(range(0, 21000, 50))
 repetitions = 5
@@ -128,11 +128,11 @@ population_size = 30
 nmax = 5
 
 
-# args = (name, paintins, repetitions, polys, iterations, savepoints)
+# args = (name, paintings_files, repetitions, polys, iterations, savepoints)
 
 names = ["mona", "bach","dali", "mondriaanSA", "pollock", "starrynight", "kiss"]
 # names = ["kiss1", "kiss2","kiss3","kiss4","kiss5"]
-#experiment(name, "HC" paintins, repetitions, polys, iterations, savepoints)
+#experiment(name, "HC" paintings_files, repetitions, polys, iterations, savepoints)
 
 # parallelize stuff
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 	worker_count = 7
 	worker_pool = []
 	for i in range(worker_count):
-		# print(str(paintins[i]), paintin)
-		args = (names[i], "SA", paintins[i], repetitions, polys, iterations, savepoints)
+		# print(str(paintings_files[i]), paintin)
+		args = (names[i], "SA", paintings_files[i], repetitions, polys, iterations, savepoints)
 		p = Process(target=experiment, args=args)
 		p.start()
