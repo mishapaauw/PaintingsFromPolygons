@@ -68,7 +68,7 @@ class Organism():
 			xy = (randint(0,self.w),randint(0,self.h))
 			self.genome[j][0].append(xy)
 
-		# first 150 vertices have been devided over genomesize polygons, ensuring each polygon is at least a triangle
+		# first 150 vertices have been divided over genomesize polygons, ensuring each polygon is at least a triangle
 		# remaining vertices are randomly distributed over the polygons
 	def name(self):
 		return "{:0>6}".format(self.generation) + "-" + "{:0>3}".format(self.id)
