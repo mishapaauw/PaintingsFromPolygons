@@ -12,3 +12,17 @@ We would appreciate that you referenced this papers if you use this code
   year={2019}
 }
 ```
+
+## Install
+
+Install required libraries with
+
+    pip install -r requirements.txt
+	
+## Run
+
+Run with
+
+	python main.py
+	
+This is going to take some time and a lot of memory, to get ready to let it hang for a while.
