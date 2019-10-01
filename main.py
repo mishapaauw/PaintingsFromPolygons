@@ -72,7 +72,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 			for repetition in range(repetitions):
 				tic = time.time()
 				# make a directory for this run, containing the per iteration data and a selection of images
-				outdir = name + "/" + str(exp) + "-" + str(repetition) + "-" + str(poly) + "-" + painting_name
+				outdir = "output/"+ name + "/" + str(exp) + "-" + str(repetition) + "-" + str(poly) + "-" + painting_name
 				os.makedirs(outdir)
 
 				# run the hillclimber
