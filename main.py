@@ -114,7 +114,7 @@ def experiment(name, algorithm, paintings, repetitions, polys, iterations, savep
 
 
 name = "1miltest.x2"
-paintins = [["paintings/monalisa-240-180.png"], ["paintings/bach-240-180.png"], ["paintings/dali-240-180.png"], ["paintings/mondriaan2-180-240.png"], ["paintings/pollock-240-180.png"], ["paintings/starrynight-240-180.png"], ["paintings/kiss-180-240.png"]]
+paintings_files = [["paintings/monalisa-240-180.png"], ["paintings/bach-240-180.png"], ["paintings/dali-240-180.png"], ["paintings/mondriaan2-180-240.png"], ["paintings/pollock-240-180.png"], ["paintings/starrynight-240-180.png"], ["paintings/kiss-180-240.png"]]
 # paintin = ["paintings/kiss-180-240.png"]
 savepoints = list(range(0, 21000, 50))
 repetitions = 5
@@ -128,11 +128,11 @@ population_size = 30
 nmax = 5
 
 
-# args = (name, paintins, repetitions, polys, iterations, savepoints)
+# args = (name, paintings_files, repetitions, polys, iterations, savepoints)
 
 names = ["mona", "bach","dali", "mondriaanSA", "pollock", "starrynight", "kiss"]
 # names = ["kiss1", "kiss2","kiss3","kiss4","kiss5"]
-#experiment(name, "HC" paintins, repetitions, polys, iterations, savepoints)
+#experiment(name, "HC" paintings_files, repetitions, polys, iterations, savepoints)
 
 # parallelize stuff
 
@@ -140,7 +140,7 @@ if __name__ == '__main__':
 	worker_count = 7
 	worker_pool = []
 	for i in range(worker_count):
-		# print(str(paintins[i]), paintin)
-		args = (names[i], "SA", paintins[i], repetitions, polys, iterations, savepoints)
+		# print(str(paintings_files[i]), paintin)
+		args = (names[i], "SA", paintings_files[i], repetitions, polys, iterations, savepoints)
 		p = Process(target=experiment, args=args)
 		p.start()
