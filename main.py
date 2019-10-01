@@ -11,24 +11,24 @@ from multiprocessing import Process, current_process
 
 # im_goal = Image.open("paintings/bach-240-180.png")
 # im_goal = Image.open("paintings/dali-240-180.png")
-im_goal = Image.open("paintings/monalisa-240-180.png")
+#im_goal = Image.open("paintings/monalisa-240-180.png")
 # im_goal = Image.open("paintings/pollock-240-180.png")
 # im_goal = Image.open("paintings/mondriaan2-180-240.png")
 
 
-goal = np.array(im_goal)
-h, w = np.shape(goal)[0], np.shape(goal)[1]
-method = "MSE"
+#goal = np.array(im_goal)
+#h, w = np.shape(goal)[0], np.shape(goal)[1]
+#method = "MSE"
 # outdirx = "test/"
 
 # genome size settings
-polygons = 250
-vertices = 1000
+#polygons = 250
+#vertices = 1000
 
 
 # ppa specific settings
-population_size = 30
-nmax = 5 # max number of runners for the best indidiviual within a population
+# population_size = 30
+# nmax = 5 # max number of runners for the best indidiviual within a population
 
 
 def experiment(name, algorithm, paintings, repetitions, polys, iterations, savepoints):
